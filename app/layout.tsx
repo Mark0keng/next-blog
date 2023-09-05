@@ -1,6 +1,8 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { Providers } from './providers'
+import { LoginButton, LogoutButton } from './auth'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +18,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+      <div className="navbar bg-base-300">
+        <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
+        <div className="navbar-end">
+          <LoginButton/>
+          <LogoutButton/>
+        </div>
+      </div>
+        <Providers>
+          {children}
+        </Providers>
+      </body>
     </html>
   )
 }
