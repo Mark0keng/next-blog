@@ -1,62 +1,69 @@
 "use client"
-import axios from "axios"
+
 import { useRouter } from "next/navigation"
 import {SyntheticEvent, useState} from "react"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { getServerSession } from "next-auth"
+import { authOptions } from "../api/auth/[...nextauth]/route"
 
-const AddPost = () => {
+export const AddPost = async() => {
   const [title, setTitle] = useState("")
-  const [body, setBody] = useState("")
-  const [isOpen, setIsOpen] = useState(false)
+  const [content, setContent] = useState("")
+  const [error, setError] = useState("")
+  const session = await getServerSession(authOptions)
   const router = useRouter()
-  
-  const handleModal = () => {
-    setIsOpen(!isOpen)
-  }
 
-  const handleSubmit = async(e: SyntheticEvent) => {
+  const onSubmit = async(e: React.FormEvent) => {
     e.preventDefault()
-    await axios.post('/api/post', {
-      title: title,
-      body: body,
-    })
-    setTitle("")
-    setBody("")
-    router.refresh()
-    setIsOpen(false)
+    try {
+      const res = await fetch('/api/posts', {
+        method: 'POST',
+        body: JSON.stringify({
+          title,
+          content,
+          // authorId: session?.user.name
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      if(res.ok){
+        router.push('/posts')
+      } else {
+        setError((await res.json()).message)
+      }
+    } catch (error: any) {
+      console.error(error)
+    }
   }
 
   return (
-    <div>
-      <button className="btn btn-primary mb-5" onClick={handleModal}>Add Post</button>
-
-      <dialog className={ isOpen ? 'modal modal-open': 'modal'}>
-        <form method="dialog" className="modal-box">
-          <h3 className="font-bold text-lg mb-5">Add New Post</h3>
-            <div className="form-control w-full">
-              <label className="label font-bold">Title</label>
-              <input 
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="input input-bordered"/>
-            </div>
-            <div className="form-control w-full">
-              <label className="label font-bold">Body</label>
-              <input 
-                type="text"
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                className="input input-bordered"/>
-            </div>
-
-            <div className="modal-action">
-              <button className="btn" onClick={handleModal}>Close</button>
-              <button className="btn btn-primary">Save</button>
-            </div>
-        </form>
-      </dialog>
-    </div>
+      <Dialog>
+        <DialogTrigger>
+          <Button>Add Post</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Post</DialogTitle>
+          </DialogHeader>
+            <form action="" className="space-y-4">
+              <div>
+              <Label htmlFor="title">Judul</Label>
+              <Input></Input>
+              </div>
+              <div>
+              <Label htmlFor="content">Konten / Isi</Label>
+              <Textarea></Textarea>
+              </div>
+            </form>
+          <DialogFooter>
+            <Button>Submit</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
   )
 }
-
-export default AddPost

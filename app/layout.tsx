@@ -19,13 +19,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-      <div className="navbar bg-base-300">
+      {/* <div className="navbar bg-base-300">
         <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
         <div className="navbar-end">
           <LoginButton/>
           <LogoutButton/>
         </div>
-      </div>
+      </div> */}
         <Providers>
           {children}
         </Providers>

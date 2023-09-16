@@ -1,12 +1,12 @@
-import Link from "next/link"
+import Link from "next/link";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { LoginForm } from "./form"
+} from "@/components/ui/card";
+import { LoginForm } from "./form";
 
 export default function LoginPage() {
   return (
@@ -16,10 +16,21 @@ export default function LoginPage() {
           <CardTitle>Login</CardTitle>
         </CardHeader>
         <CardContent>
-          <LoginForm/>
-          <p className="pt-3 text-sm">Doesn't Have Account? <Link className="text-indigo-800" href='/api/auth/signin'>Sign Up</Link></p>
+          <LoginForm />
+          <Link
+            className="pt-3 text-sm text-indigo-800"
+            href={"/forgot-password"}
+          >
+            Forgot Password?
+          </Link>
+          <p className="pt-3 text-sm">
+            Does Not Have Account?{" "}
+            <Link className="text-indigo-800" href="/register">
+              Sign Up
+            </Link>
+          </p>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

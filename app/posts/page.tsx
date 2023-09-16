@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client"
-import AddPost from "./addPost"
+import { AddPost } from "./addPost"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 const prisma = new PrismaClient()
 
@@ -8,7 +9,7 @@ const getPosts = async () => {
     select: {
       title:true,
       slug: true,
-      body: true,
+      content: true,
       authorId: true,
       author: true
     }
@@ -26,29 +27,26 @@ const Post = async() => {
         <AddPost />
       </div>
 
-      <table className="table">
-        {/* head */}
-        <thead>
-          <tr>
-            <th></th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {posts.map((post, index)=>(
-            <tr key={index} className="hover">
-              <th>{index}</th>
-              <td>{post.title}</td>
-              <td>{post.author.name}</td>
-              <td>
-                
-              </td>
-            </tr>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>#</TableHead>
+            <TableHead>Title</TableHead>
+            <TableHead>Author</TableHead>
+            <TableHead>Action</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {posts.map((post, index) => (
+            <TableRow key={index}>
+            <TableCell>{index + 1}</TableCell>
+            <TableCell>{post.title}</TableCell>
+            <TableCell>{post.author.name}</TableCell>
+            <TableCell></TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   )
 }
